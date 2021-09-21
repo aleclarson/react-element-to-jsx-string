@@ -51,11 +51,11 @@ describe('sortObject', () => {
     expect(sortObject(fixture)).toMatchInlineSnapshot(`
       Object {
         "a": Object {
-          "b": "[Circular]",
+          "b": [Circular],
         },
         "array": Array [
           Object {
-            "b": "[Circular]",
+            "b": [Circular],
           },
         ],
       }
