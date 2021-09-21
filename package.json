@@ -1,6 +1,6 @@
 {
   "name": "@alloc/react-element-to-string",
-  "version": "14.3.2",
+  "version": "14.3.3",
   "description": "Turn a ReactElement into the corresponding JSX string.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
