@@ -1,6 +1,6 @@
 /* @flow */
 
-export default function sortObject(value: any, seen = []): any {
+export default function sortObject(value: any, objects = new Map()): any {
   // return non-object value as is
   if (value === null || typeof value !== 'object') {
     return value;
@@ -11,25 +11,26 @@ export default function sortObject(value: any, seen = []): any {
     return value;
   }
 
-  if (seen.includes(value)) return '[Circular]';
-  seen.push(value);
+  let sorted = objects.get(value);
+  if (sorted) {
+    return sorted;
+  }
 
   if (Array.isArray(value)) {
     // make a copy of array with each item passed through sortObject()
-    value = value.map(value => sortObject(value, seen));
+    objects.set(value, (sorted = []));
+    value.forEach((value, i) => {
+      sorted[i] = sortObject(value, objects);
+    });
   } else {
     // make a copy of object with key sorted
-    value = Object.keys(value)
-      .sort()
-      .reduce((result, key) => {
-        if (key !== '_owner') {
-          // eslint-disable-next-line no-param-reassign
-          result[key] = sortObject(value[key], seen);
-        }
-        return result;
-      }, {});
+    objects.set(value, (sorted = {}));
+    for (const key of Object.keys(value).sort()) {
+      if (key !== '_owner') {
+        sorted[key] = sortObject(value[key], objects);
+      }
+    }
   }
 
-  seen.pop();
-  return value;
+  return sorted;
 }
